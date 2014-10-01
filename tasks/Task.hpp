@@ -38,6 +38,7 @@ namespace tilt_scan {
         base::commands::Joints servoCmd;
         base::Time lastCmdTime;
     public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         Task(std::string const& name = "tilt_scan::Task");
         Task(std::string const& name, RTT::ExecutionEngine* engine);
 
