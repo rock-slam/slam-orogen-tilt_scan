@@ -38,6 +38,7 @@ void Task::checkTiltStatus()
 		} catch(std::exception &e)
 		{
 			LOG_ERROR("%s", e.what());
+			exception();
 			return;
 		}
 		tilt_ok = true;
