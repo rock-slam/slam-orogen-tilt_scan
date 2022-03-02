@@ -33,7 +33,13 @@ void Task::checkTiltStatus()
 	bool tilt_ok = false;
 	while(_tilt_status_samples.read(joints) == RTT::NewData)
 	{
-		jointState = joints.getElementByName(mConfiguration.sweep_servo_name);
+		try {
+			jointState = joints.getElementByName(mConfiguration.sweep_servo_name);
+		} catch(std::exception &e)
+		{
+			LOG_ERROR("%s", e.what());
+			return;
+		}
 		tilt_ok = true;
 	}
 	
@@ -132,7 +138,7 @@ void Task::scan_samplesTransformerCallback(const base::Time &ts, const base::sam
 	{
 		return;
 	}
-	
+
 	// Get pose of the laser in odometry frame
 	mLastScanTime = ts;
 	Eigen::Affine3d laser2odometry;
@@ -155,6 +161,7 @@ void Task::scan_samplesTransformerCallback(const base::Time &ts, const base::sam
 	
 	// Check sweep and update status
 	checkTiltStatus();
+
 	_sweep_status.write(mSweepStatus);
 }
 
@@ -176,6 +183,7 @@ bool Task::configureHook()
 	state.speed = mConfiguration.sweep_velocity_down;
 	mTiltDownCommand.names.push_back( mConfiguration.sweep_servo_name );
 	mTiltDownCommand.elements.push_back( state );
+
 	return true;
 }
 
